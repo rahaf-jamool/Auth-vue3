@@ -18,12 +18,12 @@
       >Roles</router-link
     >
     <router-link
-      to="/assignrole"
+      to="/permissions"
       class="nav-link a"
       role="tab"
       aria-controls="v-pills-home"
       aria-selected="true"
-      >Assign Role</router-link
+      >Permissions</router-link
     >
     <router-link
       to="/posts"
@@ -35,7 +35,7 @@
       >Posts</router-link
     >
     <router-link
-      to="/user"
+      to="/users"
       class="nav-link a"
       data-toggle="pill"
       role="tab"

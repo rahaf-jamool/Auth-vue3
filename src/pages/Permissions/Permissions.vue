@@ -10,22 +10,22 @@
         <tr class="head">
           <th class="col1">ID</th>
           <th class="col2">name</th>
-          <th class="col3">for</th>
+          <!-- <th class="col3">for</th> -->
           <th class="col5">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="body" v-for="permission in permissions" :key="permission.id">
-          <th class="row1">{{ permission.id }}</th>
-          <td class="row2">{{ permission.name }}</td>
-          <td class="row3">{{ permission.for }}</td>
+        <tr class="body" v-for="per in permissions" :key="per.id">
+          <th class="row1">{{ per.id }}</th>
+          <td class="row2">{{ per.name }}</td>
+          <!-- <td class="row3">{{ permission.for }}</td> -->
           <td class="row5">
             <button class="btn btn-primary">View</button>
-            <!-- <router-link
-              :to="{ path: `/role/update/${permission.id}`, params: { id: permission.id } }"
-            > -->
+            <router-link
+              :to="{ path: `/permission/update/${per.id}`, params: { id: per.id } }"
+            >
               <button class="btn btn-info">Edit</button>
-            <!-- </router-link> -->
+            </router-link>
             <button
               class="btn btn-danger"
               type="submit"

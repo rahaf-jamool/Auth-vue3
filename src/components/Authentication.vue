@@ -26,25 +26,53 @@
                       <div class="center-wrap">
                         <div class="section text-center">
                           <h4 class="mb-4 pb-3">Log In</h4>
-                          <div class="form-group">
+                          <div class="formLog">
+                            <div class="form-group1">
                             <input
                               type="email"
-                              name="logemail"
                               class="form-style"
                               v-model="form.email"
                               placeholder="Your Email"
+                              name="email"
+                              required
+                              ref="email"
+                              @keyup="handleEmail()"
                             />
                             <i class="input-icon uil uil-at"></i>
+                            <div style="color: red" v-if="statusEmail == false">
+                              <i class="fa fa-window-close"></i>
+                              {{ form.error }}
+                            </div>
+                            <div
+                              style="color: green"
+                              v-if="statusEmail == true"
+                            >
+                              <i class="fa fa-check-square"></i>
+                              correct Email
+                            </div>
                           </div>
-                          <div class="form-group mt-2">
+                          <div class="form-group1 ">
                             <input
                               type="password"
-                              name="logpass"
                               class="form-style"
                               v-model="form.password"
                               placeholder="Your Password"
+                              min="8"
+                              name="psw"
+                              ref="pass"
+                              required
+                              @keyup="handlePass()"
                             />
                             <i class="input-icon uil uil-lock-alt"></i>
+                            <div style="color: red" v-if="statusPass == false">
+                              <i class="fas fa-exclamation-triangle"></i>
+                              Password must be more 8 characters
+                            </div>
+                            <div style="color: green" v-if="statusPass == true">
+                              <i class="fa fa-check-square"></i>
+                              Correct Password
+                            </div>
+                          </div>
                           </div>
                           <button type="submit" class="btn mt-4">Log In</button>
                         </div>
@@ -54,62 +82,80 @@
                       <div class="center-wrap">
                         <div class="section text-center">
                           <h4 class="mb-2 pb-2">Register</h4>
-                          <div class="form-group">
-                            <input
-                              type="text"
-                              name="logname"
-                              class="form-style"
-                              placeholder="Your Full Name"
-                              v-model="form.fullName"
-                            />
-                            <i class="input-icon uil uil-user"></i>
-                          </div>
-                          <div class="form-group mt-2">
-                            <input
-                              type="email"
-                              name="logemail"
-                              class="form-style"
-                              placeholder="Your Email"
-                              v-model="form.email"
-                            />
-                            <i class="input-icon uil uil-at"></i>
-                          </div>
-                          <div class="form-group mt-2">
-                            <input
-                              type="text"
-                              class="form-style"
-                              placeholder="Your User Type"
-                              v-model="form.userType"
-                            />
-                            <i class="input-icon uil uil-user"></i>
-                          </div>
-                          <div class="form-group mt-2">
-                            <input
-                              type="password"
-                              name="logpass"
-                              class="form-style"
-                              placeholder="Your Password"
-                              v-model="form.password"
-                            />
-                            <i class="input-icon uil uil-lock-alt"></i>
-                          </div>
-                          <div class="form-group mt-2">
-                            <select
-                              v-model="form.role_id"
-                              class="form-select ml-2"
-                              required
-                            >
-                              <option selected disabled value="">
-                                Choose...
-                              </option>
-                              <option
-                                v-for="rule in rules"
-                                :key="rule.id"
-                                :value="rule.id"
+                          <div class="formReg">
+                            <div class="form-group col-md-6">
+                              <input
+                                type="text"
+                                name="logname"
+                                class="form-style"
+                                placeholder="Your Full Name"
+                                v-model="form.fullName"
+                              />
+                              <i class="input-icon uil uil-user"></i>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <input
+                                type="email"
+                                name="logemail"
+                                class="form-style"
+                                placeholder="Your Email"
+                                v-model="form.email"
+                              />
+                              <i class="input-icon uil uil-at"></i>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <input
+                                type="password"
+                                name="logpass"
+                                class="form-style"
+                                placeholder="Your Password"
+                                v-model="form.password"
+                              />
+                              <i class="input-icon uil uil-lock-alt"></i>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <!-- <label for="validationCustom04" class="form-label"
+                                >Roles</label
+                              > -->
+                              <select
+                                class="form-select form-style"
+                                id="validationCustom04"
+                                v-model="form.role"
+                                required
                               >
-                                {{ rule.name }}
-                              </option>
-                            </select>
+                                <option selected disabled value="">
+                                  Roles...
+                                </option>
+                                <option
+                                  v-for="rule in rules"
+                                  :key="rule.id"
+                                  :value="rule.id"
+                                >
+                                  {{ rule.name }}
+                                </option>
+                              </select>
+                              <div class="invalid-feedback">
+                                Please select a valid state.
+                              </div>
+                            </div>
+                            <div class="form-group col-md-6 form-assgin">
+                              <label for="validationCustom03" class="form-label"
+                                >Assgin Role</label
+                              >
+                              <div
+                                class="assgin"
+                                v-for="per in Permissions"
+                                :key="per.id"
+                              >
+                                <input
+                                  class=""
+                                  type="checkbox"
+                                  :value="per.id"
+                                  :id="per.id"
+                                  v-model="form.permissions"
+                                /><label :for="per.id">{{ per.name }}</label>
+                              </div>
+                            </div>
                           </div>
                           <button type="submit" class="btn mt-2">
                             Register
@@ -132,37 +178,60 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import axios from "axios";
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      reg: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      statusEmail: null,
+      statusPass: null,
       form: {
         fullName: "",
-        userType: "",
         email: "",
         password: "",
-        role_id: null,
+        role: "",
+        permissions: [],
+        error: "",
       },
-      rules: [],
       isLogging: false,
     };
   },
-  async created() {
-    axios
-      .get(`/api/auth/roles/getAll`)
-      .then((res) => {
-        console.log("Rules :", res.data.Roles);
-        this.rules = res.data.Roles;
-        console.log("hello");
-      })
-      .catch(function (error) {
-        console.log("Error: ", error);
-      });
+  computed: {
+    ...mapState({
+      rules: (state) => state.rule.rules,
+      Permissions: (state) => state.permission.permissions,
+    }),
+  },
+  mounted() {
+    this.$store.dispatch("rule/loadRules");
+    this.$store.dispatch("permission/loadPermissions");
   },
   methods: {
     goto: function () {
       this.$router.push(`/`);
+    },
+    handleEmail() {
+      if (this.users.email == null || this.users.email == "") {
+        this.statusEmail = false;
+        this.users.error = "Please Enter Email";
+        this.$refs.email.style.border = "1px solid red";
+      } else if (!this.reg.test(this.users.email)) {
+        this.statusEmail = false;
+        this.users.error = "Please Enter Correct Email";
+        this.$refs.email.style.border = "1px solid red";
+      } else if (this.reg.test(this.users.email)) {
+        this.statusEmail = true;
+        this.$refs.email.style.border = "1px solid green";
+      }
+    },
+    handlePass() {
+      if (this.users.password.length < 8) {
+        this.statusPass = false;
+        this.$refs.pass.style.border = "1px solid red";
+      } else {
+        this.statusPass = true;
+        this.$refs.pass.style.border = "1px solid green";
+      }
     },
     ...mapActions({
       signIn: "auth/signIn",
@@ -280,6 +349,7 @@ p {
 }
 h4 {
   font-weight: 600;
+  color: snow;
 }
 h6 span {
   padding: 0 20px;
@@ -336,7 +406,7 @@ h6 span {
 }
 .card-3d-wrap {
   position: relative;
-  width: 440px;
+  width: 700px;
   max-width: 100%;
   height: 400px;
   -webkit-transform-style: preserve-3d;
@@ -392,9 +462,27 @@ h6 span {
 }
 .form-group {
   position: relative;
-  display: block;
-  margin: 0;
-  padding: 0;
+  width: 50%;
+}
+.form-group1{
+    position: relative;
+    width: 70%;
+    margin: 10px auto;
+}
+.form-group select[data-v-5eb116b0] {
+  width: 100%;
+  height: 50px;
+}
+.form-assgin {
+  color: snow;
+}
+.formReg {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  width: 100%;
 }
 .form-style {
   padding: 13px 20px;

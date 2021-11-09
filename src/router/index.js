@@ -12,10 +12,10 @@ import rules from "../pages/Roles/Roles";
 import NewRole from "../pages/Roles/NewRole";
 import EditRole from "../pages/Roles/EditRole";
 
-import AssignRole from "../pages/Roles/assignRole";
 // permission
-// import Permission from "../pages/Permissions/Permissions"
-// import NewPermission from "../pages/Permissions/NewPermission"
+import Permission from "../pages/Permissions/Permissions"
+import NewPermission from "../pages/Permissions/NewPermission"
+import EditPermission from "../pages/Permissions/EditPermission"
 
 // users
 import users from "../pages/Users/Users";
@@ -34,7 +34,7 @@ const routes = [
   },
   // users
   {
-    path: "/user",
+    path: "/users",
     component: users,
     name: "users",
   },
@@ -77,22 +77,22 @@ const routes = [
     component: EditRole,
     params: true,
   },
-  {
-    path: "/assignrole",
-    component: AssignRole,
-    name: "assignRole",
-  },
   //permission
-  // {
-  //   path: "/permissions",
-  //   component:Permission,
-  //   name: "permission"
-  // },
-  // {
-  //   path: "/permission/create",
-  //   component: NewPermission,
-  //   name: "NewPermission",
-  // },
+  {
+    path: "/permissions",
+    component:Permission,
+    name: "permission"
+  },
+  {
+    path: "/permission/create",
+    component: NewPermission,
+    name: "NewPermission",
+  },
+  {
+    path: "/permission/update/:id",
+    component:  EditPermission,
+    name: "EditPermission",
+  },
 ];
 
 const router = createRouter({

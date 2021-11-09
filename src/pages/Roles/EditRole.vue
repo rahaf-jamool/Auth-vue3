@@ -51,27 +51,17 @@
           />
           <div class="valid-feedback">Looks good!</div>
         </div>
-        <div class="col-md-6">
-          <label for="validationCustom02" class="form-label">Description</label>
-          <input
-            type="text"
-            class="form-control"
-            id="validationCustom02"
-            v-model="roles.slug"
-            required
-          />
-          <div class="valid-feedback">Looks good!</div>
-        </div>
-        <div class="col-md-6">
-          <label for="validationCustom02" class="form-label">User</label>
-          <input
-            type="text"
-            class="form-control"
-            id="validationCustom02"
-            v-model="roles.isAdmin"
-            required
-          />
-          <div class="valid-feedback">Looks good!</div>
+        <div class="col-md-6 form-assgin">
+          <label for="validationCustom02" class="form-label">Assgin Role</label>
+          <div class="assgin" v-for="per in Permissions" :key="per.id">
+            <input
+              class=""
+              type="checkbox"
+              :value="per.id"
+              :id="per.id"
+              v-model="roles.permissions"
+            /><label :for="per.id">{{ per.name }}</label>
+          </div>
         </div>
       </form>
       <div class="child_4">
@@ -83,6 +73,8 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   components: {},
   data() {
@@ -94,8 +86,7 @@ export default {
       Progress: 0,
       roles: {
         name: "",
-        slug: "",
-        isAdmin: null,
+        permissions: [],
       },
     };
   },
@@ -106,7 +97,14 @@ export default {
     fileError: String,
     clearAll: String,
   },
+  computed: {
+    ...mapState({
+      Permissions: (state) => state.permission.permissions,
+    }),
+  },
   mounted() {
+    this.$store.dispatch("permission/loadPermissions");
+
     this.fetch();
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
@@ -144,8 +142,8 @@ export default {
         .then((res) => {
           console.warn("Role", res);
           this.roles.name = res.data.role.name;
-          this.roles.slug = res.data.role.slug;
-          this.roles.isAdmin = res.data.role.isAdmin;
+          // this.roles.slug = res.data.role.slug;
+          // this.roles.isAdmin = res.data.role.isAdmin;
         })
         .catch(function (error) {
           if (error) {
@@ -163,12 +161,8 @@ export default {
         this.Massage_warning =
           "Please enter the name field because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.roles.slug == "") {
-        this.Massage_warning = "Please select the slug because it is required";
-        document.getElementById(`m`).classList.toggle("cvs");
-      } else if (!this.roles.isAdmin) {
-        this.Massage_warning =
-          "Please select the isAdmin because it is required";
+      } else if (this.roles.permissions == "") {
+        this.Massage_warning = "Please check one or multi the Permissions because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
       } else {
         document.getElementById("sp").classList.toggle("cvs");
@@ -209,6 +203,19 @@ input {
 }
 .child_4 button:hover {
   box-shadow: 2px 2px 20px #0d6efd;
+}
+form div {
+  margin: 10px auto;
+}
+form .form-assgin {
+  padding: 20px;
+}
+form .form-assgin div {
+  display: flex;
+  gap: 10px;
+}
+form .form-assgin div input {
+  margin: auto 0;
 }
 .lng {
   display: flex;

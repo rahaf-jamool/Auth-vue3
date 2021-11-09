@@ -9,9 +9,9 @@
       <thead>
         <tr class="head">
           <th class="col1">ID</th>
-          <th class="col2">name</th>
-          <th class="col3">email</th>
-          <th class="col4">User Type</th>
+          <th class="col2">Name</th>
+          <th class="col3">Email</th>
+          <th class="col4">Role</th>
           <th class="col5">Actions</th>
         </tr>
       </thead>
@@ -20,7 +20,11 @@
           <th class="row1">{{ user.id }}</th>
           <td class="row2">{{ user.fullName }}</td>
           <td class="row3">{{ user.email }}</td>
-          <td class="row4">{{ user.userType }}</td>
+          <td class="row4">
+            <div v-for="item in user.roles" :key="item.pr">
+              {{ item.name }}
+            </div>
+          </td>
           <td class="row5">
             <button class="btn btn-primary">View</button>
             <router-link

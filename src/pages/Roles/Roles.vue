@@ -9,9 +9,9 @@
       <thead>
         <tr class="head">
           <th class="col1">ID</th>
-          <th class="col2">name</th>
-          <th class="col3">slug</th>
-          <th class="col4">Is Admin</th>
+          <th class="col2">Name</th>
+          <th class="col3">Permissions</th>
+          <!-- <th class="col4">Is Admin</th> -->
           <th class="col5">Actions</th>
         </tr>
       </thead>
@@ -19,8 +19,12 @@
         <tr class="body" v-for="rule in rules" :key="rule.id">
           <th class="row1">{{ rule.id }}</th>
           <td class="row2">{{ rule.name }}</td>
-          <td class="row3">{{ rule.slug }}</td>
-          <td class="row4">{{ rule.isAdmin }}</td>
+          <td class="row3 perm">
+            <div v-for="per in rule.permissions" :key="per.id">
+              {{ per.name }}
+            </div>
+          </td>
+          <!-- <td class="row4">{{ rule.isAdmin }}</td> -->
           <td class="row5">
             <button class="btn btn-primary">View</button>
             <router-link
@@ -109,9 +113,11 @@ export default {
 .body .row4 {
   width: 10%;
 }
-.body .row2,
-.body .row3 {
+.body .row2 {
   width: 20%;
+}
+.body .row3 {
+  width: 40%;
 }
 .body .row5 {
   display: flex;
@@ -159,6 +165,13 @@ export default {
   align-items: center;
   z-index: 5;
   font-size: 20px;
+}
+.perm div {
+  display: inline-flex;
+      margin: 5px;
+    padding: 8px;
+  border: 1px solid rgb(255, 208, 0);
+  background-color: rgb(255, 208, 0);
 }
 .cvs {
   visibility: visible !important;

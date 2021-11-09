@@ -58,41 +58,48 @@
             class="form-control"
             id="validationCustom02"
             v-model="users.email"
+            name="email"
             required
+            ref="email"
+            @keyup="handleEmail()"
           />
-          <div class="valid-feedback">Looks good!</div>
+          <div style="color: red" v-if="statusEmail == false">
+            <i class="fa fa-window-close"></i>
+            {{ users.error }}
+          </div>
+          <div style="color: green" v-if="statusEmail == true">
+            <i class="fa fa-check-square"></i>
+            correct Email
+          </div>
         </div>
         <div class="col-md-6">
-          <label for="validationCustom04" class="form-label">Password</label>
+          <label for="validationCustom03" class="form-label">Password</label>
           <input
             type="password"
             class="form-control"
-            id="validationCustom04"
+            id="validationCustom03"
             v-model="users.password"
             min="8"
+            name="psw"
+            ref="pass"
             required
+            @keyup="handlePass()"
           />
-          <div class="valid-feedback">Looks good!</div>
-        </div>
-        <div class="col-md-6">
-          <label for="validationCustom03" class="form-label">User Type</label>
-          <input
-            type="text"
-            class="form-control"
-            id="validationCustom03"
-            v-model="users.userType"
-            required
-          />
-          <div class="valid-feedback">Looks good!</div>
-        </div>
-        <div class="col-md-6">
-          <div>
-            <label for="validationCustom05" class="form-label">Roles</label>
+          <div style="color: red" v-if="statusPass == false">
+            <i class="fas fa-exclamation-triangle"></i>
+            Password must be more 8 characters
           </div>
+          <div style="color: green" v-if="statusPass == true">
+            <i class="fa fa-check-square"></i>
+            Correct Password
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="validationCustom04" class="form-label">Roles</label>
           <select
             class="form-select"
-            id="validationCustom05"
-            v-model="users.role_id"
+            id="validationCustom04"
+            v-model="users.role"
             required
           >
             <option selected disabled value="">Choose...</option>
@@ -101,6 +108,18 @@
             </option>
           </select>
           <div class="invalid-feedback">Please select a valid state.</div>
+        </div>
+        <div class="col-md-6 form-assgin">
+          <label for="validationCustom03" class="form-label">Assgin Role</label>
+          <div class="assgin" v-for="per in Permissions" :key="per.id">
+            <input
+              class=""
+              type="checkbox"
+              :value="per.id"
+              :id="per.id"
+              v-model="users.permissions"
+            /><label :for="per.id">{{ per.name }}</label>
+          </div>
         </div>
       </form>
       <div class="child_4">
@@ -123,12 +142,16 @@ export default {
       statusnumber: null,
       error: "",
       Progress: 0,
+      reg: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      statusEmail: null,
+      statusPass: null,
       users: {
         fullName: "",
         email: "",
         password: "",
-        userType: "",
-        role_id: null,
+        role: "",
+        permissions: [],
+        error: "",
       },
     };
   },
@@ -142,10 +165,12 @@ export default {
   computed: {
     ...mapState({
       rules: (state) => state.rule.rules,
+      Permissions: (state) => state.permission.permissions,
     }),
   },
   mounted() {
     this.$store.dispatch("rule/loadRules");
+    this.$store.dispatch("permission/loadPermissions");
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
       "use strict";
@@ -176,16 +201,39 @@ export default {
     close() {
       document.getElementById(`m`).classList.toggle("cvs");
     },
+    handleEmail() {
+      if (this.users.email == null || this.users.email == "") {
+        this.statusEmail = false;
+        this.users.error = "Please Enter Email";
+        this.$refs.email.style.border = "1px solid red";
+      } else if (!this.reg.test(this.users.email)) {
+        this.statusEmail = false;
+        this.users.error = "Please Enter Correct Email";
+        this.$refs.email.style.border = "1px solid red";
+      } else if (this.reg.test(this.users.email)) {
+        this.statusEmail = true;
+        this.$refs.email.style.border = "1px solid green";
+      }
+    },
+    handlePass() {
+      if (this.users.password.length < 8) {
+        this.statusPass = false;
+        this.$refs.pass.style.border = "1px solid red";
+      } else {
+        this.statusPass = true;
+        this.$refs.pass.style.border = "1px solid green";
+      }
+    },
     fetch() {
       axios
         .get(`/api/auth/user/getById/${this.$route.params.id}`)
         .then((res) => {
-          console.log(res);
+          console.log('userID',res);
           this.users.fullName = res.data.User.fullName;
-          this.users.password = res.data.User.password;
+          // this.users.password = res.data.User.password;
           this.users.email = res.data.User.email;
-          this.users.userType = res.data.User.userType;
-          this.users.role_id = res.data.User.role_id;
+          // this.users.role = res.data.User.userType;
+          // this.users.p = res.data.User.role_id;
         })
         .catch(function (error) {
           if (error) {
@@ -202,9 +250,8 @@ export default {
         this.Massage_warning =
           "Please enter the Full Name field because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.users.userType == "") {
-        this.Massage_warning =
-          "Please select the User Type because it is required";
+      } else if (this.users.role == "") {
+        this.Massage_warning = "Please select the Role because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
       } else if (this.users.email == "") {
         this.Massage_warning = "Please select the Email because it is required";
@@ -213,8 +260,17 @@ export default {
         this.Massage_warning =
           "Please select the Password because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
-      } else if (!this.users.role_id) {
-        this.Massage_warning = "Please select the Roles because it is required";
+      } else if (this.users.permissions == "") {
+        this.Massage_warning =
+          "Please check one or multi the Permissions because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusPass !== true) {
+        this.Massage_warning =
+          "Please enter a password of at least 8 characters";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusEmail !== true) {
+        this.Massage_warning =
+          "Please enter a valid email, the email must contain an @ sign";
         document.getElementById(`m`).classList.toggle("cvs");
       } else {
         document.getElementById("sp").classList.toggle("cvs");
@@ -322,6 +378,29 @@ select {
   background-color: #f4f6ff;
   left: 0;
   border: 3px dashed #a3a8b1;
+}
+form div {
+  margin: 10px auto;
+}
+form .form-select {
+  border: 1px solid #ddd;
+  width: 100%;
+  height: calc(1.5em, 0.75rem, 2px);
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+form .form-assgin {
+  padding: 20px;
+}
+form .form-assgin div {
+  display: flex;
+  gap: 10px;
+}
+form .form-assgin div input {
+  margin: auto 0;
 }
 .error {
   text-align: center;
