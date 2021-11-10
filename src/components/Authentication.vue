@@ -4,6 +4,37 @@
   </div>
 
   <div class="parent">
+    <div id="su" class="alert alert-success" role="alert">
+        {{ Massage_success }}
+      </div>
+      <svg
+        id="sp"
+        class="spinner"
+        width="65px"
+        height="65px"
+        viewBox="0 0 66 66"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          class="path"
+          fill="none"
+          stroke-width="6"
+          stroke-linecap="round"
+          cx="33"
+          cy="33"
+          r="30"
+        ></circle>
+      </svg>
+      <div
+        id="m"
+        style="cursor: pointer"
+        class="alert alert-danger alert-dismissible fade show"
+        role="alert"
+        @click="close()"
+      >
+        {{ Massage_warning }}
+      </div>
+      <!-- tab -->
     <div>
       <div class="section">
         <div class="container">
@@ -33,9 +64,9 @@
                               class="form-style"
                               v-model="form.email"
                               placeholder="Your Email"
-                              name="email"
+                              name="email1"
                               required
-                              ref="email"
+                              ref="email1"
                               @keyup="handleEmail()"
                             />
                             <i class="input-icon uil uil-at"></i>
@@ -58,8 +89,8 @@
                               v-model="form.password"
                               placeholder="Your Password"
                               min="8"
-                              name="psw"
-                              ref="pass"
+                              name="psw1"
+                              ref="pass1"
                               required
                               @keyup="handlePass()"
                             />
@@ -96,27 +127,50 @@
                             <div class="form-group col-md-6">
                               <input
                                 type="email"
-                                name="logemail"
                                 class="form-style"
                                 placeholder="Your Email"
                                 v-model="form.email"
-                              />
-                              <i class="input-icon uil uil-at"></i>
+                              name="email1"
+                              required
+                              ref="email"
+                              @keyup="handleEmail()"
+                            />
+                            <i class="input-icon uil uil-at"></i>
+                            <div style="color: red" v-if="statusEmail == false">
+                              <i class="fa fa-window-close"></i>
+                              {{ form.error }}
+                            </div>
+                            <div
+                              style="color: green"
+                              v-if="statusEmail == true"
+                            >
+                              <i class="fa fa-check-square"></i>
+                              correct Email
+                            </div>
                             </div>
                             <div class="form-group col-md-6">
                               <input
                                 type="password"
-                                name="logpass"
                                 class="form-style"
                                 placeholder="Your Password"
                                 v-model="form.password"
-                              />
-                              <i class="input-icon uil uil-lock-alt"></i>
+                              min="8"
+                              name="psw1"
+                              ref="pass"
+                              required
+                              @keyup="handlePass()"
+                            />
+                            <i class="input-icon uil uil-lock-alt"></i>
+                            <div style="color: red" v-if="statusPass == false">
+                              <i class="fas fa-exclamation-triangle"></i>
+                              Password must be more 8 characters
+                            </div>
+                            <div style="color: green" v-if="statusPass == true">
+                              <i class="fa fa-check-square"></i>
+                              Correct Password
+                            </div>
                             </div>
                             <div class="form-group col-md-6">
-                              <!-- <label for="validationCustom04" class="form-label"
-                                >Roles</label
-                              > -->
                               <select
                                 class="form-select form-style"
                                 id="validationCustom04"
@@ -142,7 +196,8 @@
                               <label for="validationCustom03" class="form-label"
                                 >Assgin Role</label
                               >
-                              <div
+                             <div class="checkassgin">
+                                <div
                                 class="assgin"
                                 v-for="per in Permissions"
                                 :key="per.id"
@@ -155,6 +210,7 @@
                                   v-model="form.permissions"
                                 /><label :for="per.id">{{ per.name }}</label>
                               </div>
+                             </div>
                             </div>
                           </div>
                           <button type="submit" class="btn mt-2">
@@ -182,6 +238,11 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      Massage_success: "",
+      Massage_warning: "",
+      statusnumber: null,
+      error: "",
+      Progress: 0,
       reg: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       statusEmail: null,
       statusPass: null,
@@ -207,30 +268,38 @@ export default {
     this.$store.dispatch("permission/loadPermissions");
   },
   methods: {
+    close() {
+      document.getElementById(`m`).classList.toggle("cvs");
+    },
     goto: function () {
       this.$router.push(`/`);
     },
     handleEmail() {
-      if (this.users.email == null || this.users.email == "") {
+      if (this.form.email == null || this.users.email == "") {
         this.statusEmail = false;
-        this.users.error = "Please Enter Email";
+        this.form.error = "Please Enter Email";
+        this.$refs.email1.style.border = "1px solid red";
         this.$refs.email.style.border = "1px solid red";
-      } else if (!this.reg.test(this.users.email)) {
+      } else if (!this.reg.test(this.form.email)) {
         this.statusEmail = false;
-        this.users.error = "Please Enter Correct Email";
+        this.form.error = "Please Enter Correct Email";
         this.$refs.email.style.border = "1px solid red";
-      } else if (this.reg.test(this.users.email)) {
+        this.$refs.email1.style.border = "1px solid red";
+      } else if (this.reg.test(this.form.email)) {
         this.statusEmail = true;
         this.$refs.email.style.border = "1px solid green";
+        this.$refs.email1.style.border = "1px solid green";
       }
     },
     handlePass() {
-      if (this.users.password.length < 8) {
+      if (this.form.password.length < 8) {
         this.statusPass = false;
         this.$refs.pass.style.border = "1px solid red";
+        this.$refs.pass1.style.border = "1px solid red";
       } else {
         this.statusPass = true;
         this.$refs.pass.style.border = "1px solid green";
+        this.$refs.pass1.style.border = "1px solid green";
       }
     },
     ...mapActions({
@@ -238,6 +307,23 @@ export default {
       register: "auth/register",
     }),
     submit() {
+      if (this.form.email == "") {
+        this.Massage_warning = "Please select the Email because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.form.password == "") {
+        this.Massage_warning =
+          "Please select the Password because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusPass !== true) {
+        this.Massage_warning =
+          "Please enter a password of at least 8 characters";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusEmail == true) {
+        this.Massage_warning =
+          "Please enter a valid email, the email must contain an @ sign";
+        document.getElementById(`m`).classList.toggle("cvs");
+      }else {
+        document.getElementById("sp").classList.toggle("cvs");
       this.signIn(this.form)
         .then(() => {
           document.getElementById("content_loader").classList.remove("hidden");
@@ -251,8 +337,37 @@ export default {
         .catch(() => {
           console.log("failed");
         });
+      }
     },
     submit1() {
+      if (this.form.fullName == "") {
+        this.Massage_warning =
+          "Please enter the Full Name field because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.form.role == "") {
+        this.Massage_warning = "Please select the Role because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.form.email == "") {
+        this.Massage_warning = "Please select the Email because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.form.password == "") {
+        this.Massage_warning =
+          "Please select the Password because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.form.permissions == "") {
+        this.Massage_warning =
+          "Please check one or multi the Permissions because it is required";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusPass !== true) {
+        this.Massage_warning =
+          "Please enter a password of at least 8 characters";
+        document.getElementById(`m`).classList.toggle("cvs");
+      } else if (this.statusEmail == true) {
+        this.Massage_warning =
+          "Please enter a valid email, the email must contain an @ sign";
+        document.getElementById(`m`).classList.toggle("cvs");
+      }else {
+        document.getElementById("sp").classList.toggle("cvs");
       this.register(this.form)
         .then(() => {
           document.getElementById("content_loader").classList.remove("hidden");
@@ -267,7 +382,8 @@ export default {
         .catch(() => {
           console.log("failed");
         });
-    },
+    }
+    }
   },
 };
 </script>
@@ -364,8 +480,8 @@ h6 span {
 .full-height {
   min-height: 100vh;
 }
-[type="checkbox"]:checked,
-[type="checkbox"]:not(:checked) {
+.checkbox:checked,
+.checkbox:not(:checked) {
   position: absolute;
   left: -9999px;
 }
@@ -408,7 +524,7 @@ h6 span {
   position: relative;
   width: 700px;
   max-width: 100%;
-  height: 400px;
+  height: 500px;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   perspective: 800px;
@@ -467,14 +583,45 @@ h6 span {
 .form-group1{
     position: relative;
     width: 70%;
-    margin: 10px auto;
+    margin: 40px auto;
 }
 .form-group select[data-v-5eb116b0] {
   width: 100%;
   height: 50px;
 }
+.checkassgin {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
 .form-assgin {
-  color: snow;
+  width: 100%;
+  font-weight: 500;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0.5px;
+  outline: none;
+  color: #c4c3ca;
+  background-color: #1f2029;
+  border: none;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+}
+.form-assgin:focus,
+.form-assgin:active {
+  border: none;
+  outline: none;
+  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+}
+.assgin input {
+  margin: 10px;
+}
+.assgin {
+    margin: auto;
 }
 .formReg {
   display: flex;
@@ -616,5 +763,97 @@ h6 span {
   height: 26px;
   width: auto;
   display: block;
+}
+</style>
+
+<style lang="scss" scoped>
+$offset: 187;
+$duration: 1.4s;
+
+.spinner {
+  animation: rotator $duration linear infinite;
+  position: absolute;
+  z-index: 50;
+  top: 50%;
+  left: 50%;
+  visibility: hidden;
+}
+.spin-hide {
+  display: none;
+}
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+.path {
+  stroke-dasharray: $offset;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation: dash $duration ease-in-out infinite,
+    colors ($duration * 4) ease-in-out infinite;
+}
+
+@keyframes colors {
+  0% {
+    stroke: #4285f4;
+  }
+  25% {
+    stroke: #de3e35;
+  }
+  50% {
+    stroke: #f7c223;
+  }
+  75% {
+    stroke: #1b9a59;
+  }
+  100% {
+    stroke: #4285f4;
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: $offset;
+  }
+  50% {
+    stroke-dashoffset: $offset/4;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: $offset;
+    transform: rotate(450deg);
+  }
+}
+.alert-danger {
+  position: fixed !important;
+  width: 75%;
+  height: 150px;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  align-items: center;
+  left: 20%;
+  z-index: 5;
+}
+.alert-success {
+  visibility: hidden;
+  position: fixed !important;
+  width: 75%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  font-size: 20px;
+  left: 20%;
+}
+.cvs {
+  visibility: visible !important;
 }
 </style>
