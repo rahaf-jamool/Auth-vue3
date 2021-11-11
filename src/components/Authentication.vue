@@ -192,7 +192,7 @@
                                 Please select a valid state.
                               </div>
                             </div>
-                            <div class="form-group col-md-6 form-assgin">
+                            <div class="form-group col-md-11 form-assgin">
                               <label for="validationCustom03" class="form-label"
                                 >Assgin Role</label
                               >
@@ -628,7 +628,6 @@ h6 span {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin: 20px;
   width: 100%;
 }
 .form-style {

@@ -160,6 +160,12 @@ export default {
               self.Massage_warning = "Error : " + error.response.data.message;
               document.getElementById("m").classList.toggle("cvs");
             }
+            else{
+              document.getElementById("sp").classList.toggle("cvs");
+              self.Massage_warning = "Error : You do not have the required authorization";
+              document.getElementById("m").classList.toggle("cvs");
+            }
+            
           });
       }
     },

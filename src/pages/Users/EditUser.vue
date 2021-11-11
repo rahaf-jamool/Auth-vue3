@@ -385,7 +385,7 @@ form div {
 form .form-select {
   border: 1px solid #ddd;
   width: 100%;
-  height: calc(1.5em, 0.75rem, 2px);
+  /* height: calc(1.5em, 0.75rem, 2px); */
   height: calc(1.5em + 0.75rem + 2px);
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
