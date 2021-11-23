@@ -13,7 +13,7 @@ export default {
   actions: {
     loadRules({ commit }) {
       axios
-        .get(`/api/auth/roles/getAll`)
+        .get(`/api/auth/roles/getAll?token`)
         .then((res) => {
           console.log("Rules :", res.data.Roles);
           let rules = res.data.Roles;

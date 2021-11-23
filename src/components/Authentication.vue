@@ -236,6 +236,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 export default {
+  name:'signin',
   data() {
     return {
       Massage_success: "",

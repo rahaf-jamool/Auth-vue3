@@ -24,31 +24,38 @@ export default {
     async signIn({ dispatch }, Credentials) {
       let res = await axios.post("/api/auth/login", Credentials);
       console.log(res.data);
-      return dispatch("attempt", res.data.access_token);
+      return dispatch("attempt", res.data.token);
     },
-    async attempt({ commit, state }, token) {
+    async attempt({ commit,state }, token) {
       if (token) {
         commit("SET_TOKEN", token);
       }
-      console.log(token);
-      if (!state.token) {
-        return;
+      if (!state.token){
+        return
       }
+
+        try{
+          let res = await axios.get('/api/auth/profile')
+          commit('SET_USER',res.data)
+        }catch(e){
+          commit("SET_TOKEN", null);
+          commit('SET_USER',null);
+        }
     },
-    //     signOut ({commit}) {
-    //         return axios.post('auth/signout').then(() => {
-    //         commit('SET_TOKEN', null);
-    //             commit('SET_USER', null);
-    //              })
-    //     }
+    async signOut ({commit}) {
+      return axios.post('/api/auth/logout').then(() => {
+      commit('SET_TOKEN', null);
+          commit('SET_USER', null);
+          })
+    },
     //Register
     async register({ dispatch }, Credentials) {
-      let res = await axios.post("/api/register", Credentials);
+      let res = await axios.post("/api/auth/register", Credentials);
       console.log(res.data);
       return dispatch("attempt1", res.data.access_token);
     },
     async attempt1({ commit }, token) {
-      console.log(token);
+     console.log(token);
       commit("SET_TOKEN1", token);
     },
   },

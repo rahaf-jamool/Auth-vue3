@@ -51,6 +51,15 @@
       aria-selected="false"
       >Settings</a
     >
+    <a
+      class="nav-link a"
+      data-toggle="pill"
+      role="tab"
+      aria-controls="v-pills-settings"
+      aria-selected="false"
+      @click.prevent="signOut"
+      >Sign Out</a
+    >
   </div>
 </template>
 
@@ -90,3 +99,21 @@
   }
 }
 </style>
+
+<script>
+import {mapActions} from 'vuex';
+export default{
+  methods:{
+    ...mapActions({
+      signOutAction: 'auth/signOut'
+    }),
+    signOut(){
+      this.signOutAction().then(()=>{
+        this.$router.replace({
+          name: 'dashboard'
+        })
+      })
+    }
+  }
+}
+</script>

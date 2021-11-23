@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Authentication from "../components/Authentication";
 import Dashboard from "../pages/Dashboard";
+import store from "@/store";
 // posts
 import posts from "../pages/Posts/Posts";
 import NewPost from "../pages/Posts/NewPost";
@@ -26,11 +27,20 @@ const routes = [
   {
     path: "/",
     component: Authentication,
+    name:'signin'
   },
   {
     path: "/dashboard",
     component: Dashboard,
     name: "dashboard",
+    beforeEnter:(to,from,next)=>{
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name: 'signin'
+        })
+      }
+      next()
+    }
   },
   // users
   {
