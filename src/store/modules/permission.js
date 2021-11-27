@@ -1,4 +1,5 @@
 import axios from "axios";
+let token = window.localStorage.getItem('token');
 
 export default {
   namespaced: true,
@@ -13,9 +14,9 @@ export default {
   actions: {
     loadPermissions({ commit }) {
       axios
-        .get(`/api/auth/permission/getAll`)
+        .get(`/api/auth/permission/getAll?${token}`)
         .then((res) => {
-          console.log("Permissions :", res.data.Permission);
+          console.log("Permissions :", res);
           let permissions = res.data.Permission;
           commit("SET_Permissions", permissions);
         })

@@ -1,4 +1,5 @@
 import axios from "axios";
+let token = window.localStorage.getItem('token');
 
 export default {
   namespaced: true,
@@ -43,7 +44,7 @@ export default {
         }
     },
     async signOut ({commit}) {
-      return axios.post('/api/auth/logout').then(() => {
+      return axios.post(`/api/auth/logout?${token}`).then(() => {
       commit('SET_TOKEN', null);
           commit('SET_USER', null);
           })

@@ -192,7 +192,7 @@
                                 Please select a valid state.
                               </div>
                             </div>
-                            <div class="form-group col-md-11 form-assgin">
+                            <!-- <div class="form-group col-md-11 form-assgin">
                               <label for="validationCustom03" class="form-label"
                                 >Assgin Role</label
                               >
@@ -211,7 +211,7 @@
                                 /><label :for="per.id">{{ per.name }}</label>
                               </div>
                              </div>
-                            </div>
+                            </div> -->
                           </div>
                           <button type="submit" class="btn mt-2">
                             Register
@@ -252,7 +252,7 @@ export default {
         email: "",
         password: "",
         role: "",
-        permissions: [],
+        // permissions: [],
         error: "",
       },
       isLogging: false,
@@ -261,12 +261,12 @@ export default {
   computed: {
     ...mapState({
       rules: (state) => state.rule.rules,
-      Permissions: (state) => state.permission.permissions,
+      // Permissions: (state) => state.permission.permissions,
     }),
   },
   mounted() {
     this.$store.dispatch("rule/loadRules");
-    this.$store.dispatch("permission/loadPermissions");
+    // this.$store.dispatch("permission/loadPermissions");
   },
   methods: {
     close() {
@@ -355,11 +355,13 @@ export default {
         this.Massage_warning =
           "Please select the Password because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.form.permissions == "") {
-        this.Massage_warning =
-          "Please check one or multi the Permissions because it is required";
-        document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.statusPass !== true) {
+      }
+      //  else if (this.form.permissions == "") {
+      //   this.Massage_warning =
+      //     "Please check one or multi the Permissions because it is required";
+      //   document.getElementById(`m`).classList.toggle("cvs");
+      // }
+       else if (this.statusPass !== true) {
         this.Massage_warning =
           "Please enter a password of at least 8 characters";
         document.getElementById(`m`).classList.toggle("cvs");

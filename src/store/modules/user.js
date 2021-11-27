@@ -1,4 +1,5 @@
 import axios from "axios";
+let token = window.localStorage.getItem('token');
 
 export default {
   namespaced: true,
@@ -13,7 +14,7 @@ export default {
   actions: {
     loadUsers({ commit }) {
       axios
-        .get(`/api/auth/user/getAll`)
+        .get(`/api/auth/user/getAll?${token}`)
         .then((res) => {
           console.log("Users :", res.data.Users);
           let Users = res.data.Users;

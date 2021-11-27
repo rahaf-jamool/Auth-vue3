@@ -1,4 +1,5 @@
 import axios from "axios";
+let token = window.localStorage.getItem('token');
 
 export default {
   namespaced: true,
@@ -13,7 +14,7 @@ export default {
   actions: {
     loadPosts({ commit }) {
       axios
-        .get(`/api/auth/posts/getAll`)
+        .get(`/api/auth/posts/getAll?${token}`)
         .then((res) => {
           console.log("Posts :", res.data.Posts);
           let posts = res.data.Posts;

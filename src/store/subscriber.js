@@ -14,17 +14,6 @@ store.subscribe((mutations) => {
             axios.defaults.headers.common['Authorization'] = null;
             localStorage.removeItem('token');
         }
-            // if (mutations.payload) {
-            //     axios.defaults.headers.common[
-            //         'token_type'
-            //     ] = `bearer ${mutations.payload}`;
-            //     localStorage.setItem('token', mutations.payload);
-            // }
-            //  else {
-            //     axios.defaults.headers.common['token_type'] = null;
-            //     localStorage.removeItem('token');
-            // }
-            // console.log(mutations.payload)
             break;
     }
 });

@@ -109,7 +109,7 @@
           </select>
           <div class="invalid-feedback">Please select a valid state.</div>
         </div>
-        <div class="col-md-6 form-assgin">
+        <!-- <div class="col-md-6 form-assgin">
           <label for="validationCustom03" class="form-label">Assgin Role</label>
           <div class="assgin" v-for="per in Permissions" :key="per.id">
             <input
@@ -120,7 +120,7 @@
               v-model="users.permissions"
             /><label :for="per.id">{{ per.name }}</label>
           </div>
-        </div>
+        </div> -->
       </form>
       <div class="child_4">
         <button @click="addUser()" class="btn" id="btnAdd">Add</button>
@@ -150,7 +150,7 @@ export default {
         email: "",
         password: "",
         role: "",
-        permissions: [],
+        // permissions: [],
         error: "",
       },
     };
@@ -238,11 +238,13 @@ export default {
         this.Massage_warning =
           "Please select the Password because it is required";
         document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.users.permissions == "") {
-        this.Massage_warning =
-          "Please check one or multi the Permissions because it is required";
-        document.getElementById(`m`).classList.toggle("cvs");
-      } else if (this.statusPass !== true) {
+      } 
+      // else if (this.users.permissions == "") {
+      //   this.Massage_warning =
+      //     "Please check one or multi the Permissions because it is required";
+      //   document.getElementById(`m`).classList.toggle("cvs");
+      // }
+       else if (this.statusPass !== true) {
         this.Massage_warning =
           "Please enter a password of at least 8 characters";
         document.getElementById(`m`).classList.toggle("cvs");
