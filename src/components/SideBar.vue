@@ -51,15 +51,6 @@
       aria-selected="false"
       >Settings</a
     >
-    <a
-      class="nav-link a"
-      data-toggle="pill"
-      role="tab"
-      aria-controls="v-pills-settings"
-      aria-selected="false"
-      @click.prevent="signOut"
-      >Sign Out</a
-    >
   </div>
 </template>
 
@@ -72,8 +63,11 @@
   top: 0;
   left: 0;
   background-color: #111;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+  /* padding-top: 20px; */
   padding-top: 20px;
+    line-height: 50px;
+    overflow: hidden;
 }
 
 .sidenav .a {
@@ -101,19 +95,7 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
 export default{
-  methods:{
-    ...mapActions({
-      signOutAction: 'auth/signOut'
-    }),
-    signOut(){
-      this.signOutAction().then(()=>{
-        this.$router.replace({
-          name: 'dashboard'
-        })
-      })
-    }
-  }
+  
 }
 </script>

@@ -1,5 +1,36 @@
 <template>
   <div class="posts">
+    <div id="su" class="alert alert-success" role="alert">
+        {{ Massage_success }} .
+      </div>
+      <svg
+        id="sp"
+        class="spinner"
+        width="65px"
+        height="65px"
+        viewBox="0 0 66 66"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          class="path"
+          fill="none"
+          stroke-width="6"
+          stroke-linecap="round"
+          cx="33"
+          cy="33"
+          r="30"
+        ></circle>
+      </svg>
+      <div
+        id="m"
+        style="cursor: pointer"
+        class="alert alert-danger alert-dismissible fade show"
+        role="alert"
+        @click="close()"
+      >
+        {{ Massage_warning }}
+      </div>
+      <!-- tab -->
     <h1>Rules</h1>
     <router-link to="/role/create">
       <button class="btn btn-success mb-2">Create Rule</button>
@@ -16,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="body" v-for="rule in rules" :key="rule.id">
+        <tr class="body" v-for="rule in roles" :key="rule.id">
           <th class="row1">{{ rule.id }}</th>
           <td class="row2">{{ rule.name }}</td>
           <td class="row3 perm">
@@ -77,20 +108,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-// import axios from "axios";
+// import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
   name: "rules",
-  computed: {
-    ...mapState({
-      rules: (state) => state.rule.rules,
-    }),
+  data() {
+    return {
+      Massage_success: "",
+      Massage_warning: "",
+      statusnumber: null,
+      error: "",
+      Progress: 0,
+      roles:[]
+    }
   },
-  mounted() {
-    this.$store.dispatch("rule/loadRules");
+  created() {
+        this.fetch();
+    },
+  methods: {
+    close() {
+      document.getElementById(`m`).classList.toggle("cvs");
+    },
+    async  fetch() {
+      var self = this;
+      let token = window.localStorage.getItem('token');
+        await axios
+            .get(`/api/auth/roles/getAll?${token}`)
+            .then((res) => {
+              if(self.roles !== ''){
+                  self.roles = res.data.Roles; 
+              }else{
+                console.log('forbedden',res.data.content);
+                alert('forbedden '+res.data.content) 
+              }
+                console.log('Roles: ', res);                         
+            })
+            .catch(function (error) {
+                console.warn('Error roles ', error);
+            });
+    },
   },
-  methods: {},
 };
 </script>
 
@@ -324,4 +382,33 @@ $duration: 1.4s;
     transform: rotate(450deg);
   }
 }
+.alert-danger {
+  position: fixed !important;
+  width: 75%;
+  height: 150px;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  align-items: center;
+  left: 20%;
+  z-index: 5;
+}
+.alert-success {
+  visibility: hidden;
+  position: fixed !important;
+  width: 75%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  font-size: 20px;
+  left: 20%;
+}
+.cvs {
+  visibility: visible !important;
+}
+
 </style>
+

@@ -77,18 +77,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   name: "users",
-  computed: {
-    ...mapState({
-      Users: (state) => state.user.Users,
-    }),
+  data() {
+    return {
+      Massage_success: "",
+      Massage_warning: "",
+      statusnumber: null,
+      error: "",
+      Progress: 0,
+      Users:[]
+    }
   },
-  mounted() {
-    this.$store.dispatch("user/loadUsers");
+  created() {
+        this.fetch();
+    },
+  methods: {
+    close() {
+      document.getElementById(`m`).classList.toggle("cvs");
+    },
+    async  fetch() {
+      var self = this;
+      let token = window.localStorage.getItem('token');
+        await axios
+            .get(`/api/auth/user/getAll?${token}`)
+            .then((res) => {
+              if(self.Users !== ''){
+                  self.Users = res.data.Users; 
+                 
+              }else{
+                console.log('forbedden',res.data.content);
+                alert('forbedden '+res.data.content)
+                
+              }
+                console.log('Users: ', res);                         
+            })
+            .catch(function (error) {
+                console.warn('Error users ', error);
+            });
+    },
   },
 };
 </script>

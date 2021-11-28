@@ -127,7 +127,8 @@ export default {
           .then(function (response) {
             console.log(response.data);
             document.getElementById("sp").classList.toggle("cvs");
-            self.Massage_success = "Create Permission Request Success";
+            // self.Massage_success = "Create Permission Request Success";
+            self.Massage_success = response.data.content;
             document.getElementById("su").classList.toggle("cvs");
             setTimeout(() => {
               self.$router.push({ name: "permission" });

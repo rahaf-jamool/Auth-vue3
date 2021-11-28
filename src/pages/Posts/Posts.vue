@@ -11,7 +11,7 @@
           <th class="col1">ID</th>
           <th class="col2">Title</th>
           <th class="col3">Description</th>
-          <th class="col4">user</th>
+          <!-- <th class="col4">user</th> -->
           <th class="col5">Actions</th>
         </tr>
       </thead>
@@ -20,7 +20,7 @@
           <th class="row1">{{ post.id }}</th>
           <td class="row2">{{ post.title }}</td>
           <td class="row3">{{ post.body }}</td>
-          <td class="row4">{{ post.user_id }}</td>
+          <!-- <td class="row4">{{ post.user_id }}</td> -->
           <td class="row5">
             <button class="btn btn-primary">View</button>
             <router-link
@@ -72,20 +72,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import axios from "axios";
 
 export default {
   name: "posts",
-  computed: {
-    ...mapState({
-      posts: (state) => state.post.posts,
-    }),
+  data() {
+    return {
+      Massage_success: "",
+      Massage_warning: "",
+      statusnumber: null,
+      error: "",
+      Progress: 0,
+      posts:[]
+    }
   },
-  mounted() {
-    this.$store.dispatch("post/loadPosts");
+  created() {
+        this.fetch();
   },
   methods: {
+    close() {
+      document.getElementById(`m`).classList.toggle("cvs");
+    },
+    async  fetch() {
+      var self = this;
+      let token = window.localStorage.getItem('token');
+        await axios
+            .get(`/api/auth/posts/getAll?${token}`)
+            .then((res) => {
+              if(self.posts !== ''){
+                  self.posts = res.data.Posts; 
+                 
+              }else{
+                console.log('forbedden',res.data.content);
+                alert('forbedden '+res.data.content)
+                
+              }
+                console.log('Posts: ', res.data.Posts);                         
+            })
+            .catch(function (error) {
+                console.warn('Error posts ', error);
+            });
+    },
     deletCategory(i) {
       var self = this;
       var r = confirm(`Are you sure you want to delete Post id ${i}`);

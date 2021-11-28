@@ -64,9 +64,9 @@
                               class="form-style"
                               v-model="form.email"
                               placeholder="Your Email"
-                              name="email1"
+                              name="email"
                               required
-                              ref="email1"
+                              ref="email"
                               @keyup="handleEmail()"
                             />
                             <i class="input-icon uil uil-at"></i>
@@ -89,8 +89,8 @@
                               v-model="form.password"
                               placeholder="Your Password"
                               min="8"
-                              name="psw1"
-                              ref="pass1"
+                              name="psw"
+                              ref="pass"
                               required
                               @keyup="handlePass()"
                             />
@@ -130,7 +130,7 @@
                                 class="form-style"
                                 placeholder="Your Email"
                                 v-model="form.email"
-                              name="email1"
+                              name="email"
                               required
                               ref="email"
                               @keyup="handleEmail()"
@@ -155,7 +155,7 @@
                                 placeholder="Your Password"
                                 v-model="form.password"
                               min="8"
-                              name="psw1"
+                              name="psw"
                               ref="pass"
                               required
                               @keyup="handlePass()"
@@ -279,28 +279,28 @@ export default {
       if (this.form.email == null || this.users.email == "") {
         this.statusEmail = false;
         this.form.error = "Please Enter Email";
-        this.$refs.email1.style.border = "1px solid red";
-        this.$refs.email.style.border = "1px solid red";
+        // this.$refs.email1.style.border = "1px solid red";
+        // this.$refs.email.style.border = "1px solid red";
       } else if (!this.reg.test(this.form.email)) {
         this.statusEmail = false;
         this.form.error = "Please Enter Correct Email";
-        this.$refs.email.style.border = "1px solid red";
-        this.$refs.email1.style.border = "1px solid red";
+        // this.$refs.email.style.border = "1px solid red";
+        // this.$refs.email1.style.border = "1px solid red";
       } else if (this.reg.test(this.form.email)) {
         this.statusEmail = true;
-        this.$refs.email.style.border = "1px solid green";
-        this.$refs.email1.style.border = "1px solid green";
+        // this.$refs.email.style.border = "1px solid green";
+        // this.$refs.email1.style.border = "1px solid green";
       }
     },
     handlePass() {
       if (this.form.password.length < 8) {
         this.statusPass = false;
         this.$refs.pass.style.border = "1px solid red";
-        this.$refs.pass1.style.border = "1px solid red";
+        // this.$refs.pass1.style.border = "1px solid red";
       } else {
         this.statusPass = true;
         this.$refs.pass.style.border = "1px solid green";
-        this.$refs.pass1.style.border = "1px solid green";
+        // this.$refs.pass1.style.border = "1px solid green";
       }
     },
     ...mapActions({

@@ -34,9 +34,12 @@ export default {
       if (!state.token){
         return
       }
-
         try{
-          let res = await axios.get('/api/auth/profile')
+          let res = await axios.get('/api/auth/profile',{
+            headers:{
+              'Authorization' : 'Bearer' + token
+            }
+          })
           commit('SET_USER',res.data)
         }catch(e){
           commit("SET_TOKEN", null);
@@ -59,6 +62,19 @@ export default {
      console.log(token);
       commit("SET_TOKEN1", token);
     },
+    async profile({commit}){
+      return axios.get(`/api/auth/profile?${token}`)
+        .then((res) => {
+          console.log("Users :", res);
+          let users = res;
+          // commit("SET_Rules", rules);
+          commit("SET_USER",users);
+        })
+        .catch(function (error) {
+          console.log("Error: ", error.message);
+          console.log(error);
+      });
+    }
   },
   getters: {
     //auth

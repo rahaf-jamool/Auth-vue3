@@ -70,20 +70,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-// import axios from "axios";
+// import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
   name: "permission",
-  computed: {
-    ...mapState({
-      permissions: (state) => state.permission.permissions,
-    }),
+  data() {
+    return {
+      Massage_success: "",
+      Massage_warning: "",
+      statusnumber: null,
+      error: "",
+      Progress: 0,
+      permissions:[]
+    }
   },
-  mounted() {
-    this.$store.dispatch("permission/loadPermissions");
+  created() {
+        this.fetch();
+    },
+  methods: {
+    close() {
+      document.getElementById(`m`).classList.toggle("cvs");
+    },
+    async  fetch() {
+      var self = this;
+      let token = window.localStorage.getItem('token');
+        await axios
+            .get(`/api/auth/permission/getAll?${token}`)
+            .then((res) => {
+              if(self.permissions !== ''){
+                  self.permissions = res.data.Permission;
+              }else{
+                console.log('forbedden',res.data.content);
+                alert('forbedden '+res.data.content) 
+              }
+                console.log('Permission: ', res);                         
+            })
+            .catch(function (error) {
+                console.warn('Error permission ', error);
+            });
+    },
   },
-  methods: {},
 };
 </script>
 

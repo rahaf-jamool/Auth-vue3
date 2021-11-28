@@ -62,16 +62,20 @@
           />
           <div class="valid-feedback">Looks good!</div>
         </div>
-        <div class="col-md-6">
-          <label for="validationCustom02" class="form-label">User</label>
-          <input
-            type="text"
-            class="form-control"
-            id="validationCustom02"
+         <div class="col-md-6">
+          <label for="validationCustom04" class="form-label">Users</label>
+          <select
+            class="form-select"
+            id="validationCustom04"
             v-model="posts.user_id"
             required
-          />
-          <div class="valid-feedback">Looks good!</div>
+          >
+            <option selected disabled value="">Choose...</option>
+            <option v-for="user in users" :key="user.id" :value="user.id">
+              {{ user.fullName }}
+            </option>
+          </select>
+          <div class="invalid-feedback">Please select a valid state.</div>
         </div>
       </form>
       <div class="child_4">
@@ -83,6 +87,8 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   components: {},
   data() {
@@ -93,7 +99,7 @@ export default {
       error: "",
       Progress: 0,
       posts: {
-        name: "",
+        title: "",
         body: "",
         user_id: "",
       },
@@ -106,7 +112,13 @@ export default {
     fileError: String,
     clearAll: String,
   },
+  computed: {
+    ...mapState({
+      users: (state) => state.user.Users,
+    }),
+  },
   mounted() {
+    this.$store.dispatch("user/loadUsers");
     this.fetch();
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
@@ -177,7 +189,8 @@ export default {
           .then(function (response) {
             console.log(response.data);
             document.getElementById("sp").classList.toggle("cvs");
-            self.Massage_success = "Create Post Request Success";
+            // self.Massage_success = "Create Post Request Success";
+            self.Massage_success = response.data.content;
             document.getElementById("su").classList.toggle("cvs");
             setTimeout(() => {
               self.$router.push({ name: "posts" });
