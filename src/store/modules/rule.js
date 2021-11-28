@@ -21,9 +21,9 @@ export default {
           commit("SET_Rules", rules);
         })
         .catch(function (error) {
-          console.log("Error: ", error.message);
-          console.log(error);
-          console.log(error.status);
+          if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+        }
         });
     },
   },

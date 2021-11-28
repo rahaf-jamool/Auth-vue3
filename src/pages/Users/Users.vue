@@ -33,7 +33,7 @@
               <button class="btn btn-info">Edit</button>
             </router-link>
             <button
-              @click="deletCategory(user.id)"
+              @click="deletUser(user.id)"
               class="btn btn-danger"
               type="submit"
             >
@@ -104,19 +104,35 @@ export default {
         await axios
             .get(`/api/auth/user/getAll?${token}`)
             .then((res) => {
-              if(self.Users !== ''){
                   self.Users = res.data.Users; 
-                 
-              }else{
-                console.log('forbedden',res.data.content);
-                alert('forbedden '+res.data.content)
-                
-              }
                 console.log('Users: ', res);                         
             })
             .catch(function (error) {
+              if(error.response.status == 403){
+                alert('error '+error.response.data.error)
+            }
                 console.warn('Error users ', error);
             });
+    },
+    deletUser(i) {
+        var r = confirm(`Are you sure you want to delete Role id ${i}`);
+        if (r == true) {
+          axios
+            .delete(`/api/auth/user/delete/${i}`)
+            .then(function(response) {
+              console.log(response);
+                alert('This User Is deleted Now');
+                self.$store.dispatch("loadUsers");
+            })
+            .catch(function(error) {
+              if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+        }else if (error.response) {
+                console.log(error.respons);
+                alert(` error !! Sorry we will work for this error soon `) ;
+              }
+            });
+        }
     },
   },
 };

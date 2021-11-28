@@ -64,7 +64,7 @@
               <button class="btn btn-info">Edit</button>
             </router-link>
             <button
-              @click="deletCategory(rule.id)"
+              @click="deletRole(rule.id)"
               class="btn btn-danger"
               type="submit"
             >
@@ -115,6 +115,7 @@ export default {
   name: "rules",
   data() {
     return {
+      deleted: null,
       Massage_success: "",
       Massage_warning: "",
       statusnumber: null,
@@ -136,17 +137,35 @@ export default {
         await axios
             .get(`/api/auth/roles/getAll?${token}`)
             .then((res) => {
-              if(self.roles !== ''){
                   self.roles = res.data.Roles; 
-              }else{
-                console.log('forbedden',res.data.content);
-                alert('forbedden '+res.data.content) 
-              }
                 console.log('Roles: ', res);                         
             })
             .catch(function (error) {
-                console.warn('Error roles ', error);
+              if(error.response.status == 403){
+                alert('error '+error.response.data.error)
+              }
+                console.warn('Error roles ', error.response);
             });
+    },
+    deletRole(i) {
+        var r = confirm(`Are you sure you want to delete Role id ${i}`);
+        if (r == true) {
+          axios
+            .delete(`/api/auth/role/delete/${i}`)
+            .then(function(response) {
+              console.log(response);
+                alert('This Role Is deleted Now');
+                self.$store.dispatch("loadRules");
+            })
+            .catch(function(error) {
+              if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+        }else if (error.response) {
+                console.log(error.respons);
+                alert(` error !! Sorry we will work for this error soon `) ;
+              }
+            });
+        }
     },
   },
 };

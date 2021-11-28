@@ -27,6 +27,7 @@
               <button class="btn btn-info">Edit</button>
             </router-link>
             <button
+            @click="deletPermission(post.id)"
               class="btn btn-danger"
               type="submit"
             >
@@ -98,17 +99,35 @@ export default {
         await axios
             .get(`/api/auth/permission/getAll?${token}`)
             .then((res) => {
-              if(self.permissions !== ''){
                   self.permissions = res.data.Permission;
-              }else{
-                console.log('forbedden',res.data.content);
-                alert('forbedden '+res.data.content) 
-              }
                 console.log('Permission: ', res);                         
             })
             .catch(function (error) {
+              if(error.response.status == 403){
+                alert('error '+error.response.data.error)
+            }
                 console.warn('Error permission ', error);
             });
+    },
+    deletPermission(i) {
+      var r = confirm(`Are you sure you want to delete Role id ${i}`);
+        if (r == true) {
+          axios
+            .delete(`/api/auth/permission/delete/${i}`)
+            .then(function(response) {
+              console.log(response);
+                alert('This Permission Is deleted Now');
+                self.$store.dispatch("loadPermissions");
+            })
+            .catch(function(error) {
+              if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+          }else if (error.response) {
+                console.log(error.respons);
+                alert(` error !! Sorry we will work for this error soon `) ;
+              }
+            });
+        }
     },
   },
 };

@@ -171,15 +171,17 @@ export default {
           .then(function (response) {
             console.log(response.data);
             document.getElementById("sp").classList.toggle("cvs");
-            // self.Massage_success = "Update Role Request Success";
-            self.Massage_success = response.data.content;
+            self.Massage_success = "Update Role Request Success";
+            // self.Massage_success = response.data.content;
             document.getElementById("su").classList.toggle("cvs");
             setTimeout(() => {
               self.$router.push({ name: "rules" });
             }, 2000);
           })
           .catch(function (error) {
-            if (error.response) {
+            if(error.response.status == 403){
+                alert('error '+error.response.data.error)
+            }else if (error.response) {
               document.getElementById("sp").classList.toggle("cvs");
               self.Massage_warning = "Error : " + error.response.data.message;
               document.getElementById("m").classList.toggle("cvs");

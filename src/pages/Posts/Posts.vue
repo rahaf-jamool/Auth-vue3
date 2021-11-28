@@ -28,7 +28,7 @@
               ><button class="btn btn-info">Edit</button></router-link
             >
             <button
-              @click="deletCategory(post.id)"
+              @click="deletPost(post.id)"
               class="btn btn-danger"
               type="submit"
             >
@@ -99,44 +99,35 @@ export default {
         await axios
             .get(`/api/auth/posts/getAll?${token}`)
             .then((res) => {
-              if(self.posts !== ''){
                   self.posts = res.data.Posts; 
-                 
-              }else{
-                console.log('forbedden',res.data.content);
-                alert('forbedden '+res.data.content)
-                
-              }
                 console.log('Posts: ', res.data.Posts);                         
             })
             .catch(function (error) {
+              if(error.response.status == 403){
+                alert('error '+error.response.data.error)
+            }
                 console.warn('Error posts ', error);
             });
     },
-    deletCategory(i) {
-      var self = this;
-      var r = confirm(`Are you sure you want to delete Post id ${i}`);
-      if (r == true) {
-        // document.getElementById(`sp${i}`).classList.toggle("cvs");
-        axios
-          .delete(`http://127.0.0.1:8000/api/post/delete/${this.post.id}`)
-          .then(function() {
-            self.Massage_success = "Success Item Delete";
-            // document.getElementById(`sp${i}`).classList.toggle("cvs");
-            // document.getElementById(`s${i}`).classList.toggle("cvs");
-            // setTimeout(() => {
-            //   document.getElementById(`s${i}`).classList.toggle("cvs");
-            // }, 3000);
-            // self.$store.dispatch("post/loadPosts");
-          })
-          .catch(function(error) {
-            if (error.response) {
-              // document.getElementById(`sp${i}`).classList.toggle("cvs");
-              this.Massage_warning = ` error !! Sorry we will work for this error soon `;
-              // document.getElementById(`m${i}`).classList.toggle("cvs");
-            }
-          });
-      }
+    deletPost(i) {
+      var r = confirm(`Are you sure you want to delete Role id ${i}`);
+        if (r == true) {
+          axios
+            .delete(`/api/auth/post/delete/${i}`)
+            .then(function(response) {
+              console.log(response);
+                alert('This Post Is deleted Now');
+                self.$store.dispatch("loadPosts");
+            })
+            .catch(function(error) {
+              if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+        }else if (error.response) {
+                console.log(error.respons);
+                alert(` error !! Sorry we will work for this error soon `) ;
+              }
+            });
+        }
     },
   },
 };

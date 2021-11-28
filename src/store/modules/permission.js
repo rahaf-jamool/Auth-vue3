@@ -21,6 +21,9 @@ export default {
           commit("SET_Permissions", permissions);
         })
         .catch(function (error) {
+          if(error.response.status == 403){
+            alert('error '+error.response.data.error)
+        }
           console.log("Error: ", error);
         });
     },
